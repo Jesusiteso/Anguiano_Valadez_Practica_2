@@ -5,14 +5,14 @@
 * Version:
 *	1.0
 * Author:
-*	Dr. José Luis Pizano Escalante
+*	Dr. JosÃ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:
 *	12/06/2015
 ******************************************************************/
 
-module MIPS_Processor_TB;
+module MIPS_Processor_2_TB;
 reg clk = 0;
 reg reset = 0; 
 reg [7:0] PortIn; 
@@ -20,7 +20,7 @@ wire [31:0] ALUResultOut;
 wire [31:0] PortOut;
   
   
-MIPS_Processor
+MIPS_Processor_2
 DUV
 (
 	.clk(clk),

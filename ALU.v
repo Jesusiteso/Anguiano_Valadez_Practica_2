@@ -10,7 +10,7 @@
 * Version:
 *	1.0
 * Author:
-*	Dr. José Luis Pizano Escalante
+*	Dr. JosÃ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:
@@ -23,6 +23,8 @@ module ALU
 	input [31:0] A,
 	input [31:0] B,
 	input [4:0] shamt,
+	input [31:0] pcounter,
+	output[31:0] pcounter_new,
 	output reg Zero,
 	output reg [31:0]ALUResult
 );
@@ -34,6 +36,7 @@ localparam SUB = 4'b0100;
 localparam LUI = 4'b0101;
 localparam SLL = 4'b0110;
 localparam SRL = 4'b0111;
+localparam JR   = 4'b1000;
    
    always @ (A or B or ALUOperation)
      begin
@@ -54,6 +57,8 @@ localparam SRL = 4'b0111;
 		   ALUResult= B << shamt;
 		  SRL:
 		   ALUResult= B >> shamt;
+		  JR:
+		   pcounter_new=A;
 		default:
 			ALUResult= 0;
 		endcase // case(control)

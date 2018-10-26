@@ -6,7 +6,7 @@
 * Version:
 *	1.0
 * Author:
-*	Dr. José Luis Pizano Escalante
+*	Dr. JosÃ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:
@@ -31,7 +31,7 @@ assign RealAddress = {2'b0,Address[(DATA_WIDTH-1):2]};
 
 	initial
 	begin
-		$readmemh("C:/MIPS/Basic_MIPS_Processor/Source/text.dat", rom);
+		$readmemh("D:/Omar/ALTERA/MIPS/Single_Cycle_P2/Sources/text.dat", rom);
 	end
 
 	always @ (RealAddress)

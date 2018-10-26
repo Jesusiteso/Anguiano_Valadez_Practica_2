@@ -15,7 +15,7 @@
 * Version:
 *	1.5
 * Author:
-*	Dr. José Luis Pizano Escalante
+*	Dr. JosÃ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:
@@ -23,7 +23,7 @@
 ******************************************************************/
 
 
-module MIPS_Processor
+module MIPS_Processor_2
 #(
 	parameter MEMORY_DEPTH = 32,
 	parameter PC_INCREMENT = 4
@@ -194,6 +194,8 @@ ArithmeticLogicUnit
 	.A(read_data_1_wire),
 	.B(read_data_2_orr_inmmediate_wire),
 	.shamt(instruction_bus_wire[10:6]),
+	.pcounter(pc_wire),
+	.pcounter_new(pc_to_branch_wire),
 	.Zero(zero_wire),
 	.ALUResult(alu_result_wire)
 );
