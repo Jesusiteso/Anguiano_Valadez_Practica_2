@@ -24,14 +24,23 @@ module ProgramMemory
 );
 wire [(DATA_WIDTH-1):0] RealAddress;
 
-assign RealAddress = {2'b0,Address[(DATA_WIDTH-1):2]};
+wire [(DATA_WIDTH-1):0] NewAddress;
+
+//Recorre a la memoria del programa
+assign NewAddress = Address - 32'h0040_0000;
+
+assign RealAddress = {2'b0,NewAddress[(DATA_WIDTH-1):2]};
 
 	// Declare the ROM variable
 	reg [DATA_WIDTH-1:0] rom[MEMORY_DEPTH-1:0];
 
 	initial
 	begin
+<<<<<<< HEAD
 		$readmemh("D:/Omar/ALTERA/MIPS/Single_Cycle_P2/Sources/text.dat", rom);
+=======
+		$readmemh("C:/MIPS/MIPS_Processor_Practica/Sources/text.dat", rom);
+>>>>>>> 6f2ab56be0f48396cbb6122e9b54d3520c5bc2b7
 	end
 
 	always @ (RealAddress)

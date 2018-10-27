@@ -4,3 +4,5 @@
 *.mti
 *.mpf
 *.wlf
+#ignorar carpeta work
+work/
