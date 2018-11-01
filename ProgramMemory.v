@@ -36,11 +36,7 @@ assign RealAddress = {2'b0,NewAddress[(DATA_WIDTH-1):2]};
 
 	initial
 	begin
-<<<<<<< HEAD
-		$readmemh("D:/Omar/ALTERA/MIPS/Single_Cycle_P2/Sources/text.dat", rom);
-=======
 		$readmemh("C:/MIPS/MIPS_Processor_Practica/Sources/text.dat", rom);
->>>>>>> 6f2ab56be0f48396cbb6122e9b54d3520c5bc2b7
 	end
 
 	always @ (RealAddress)

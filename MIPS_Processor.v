@@ -96,7 +96,9 @@ ControlUnit
 	//LW,SW wires
 	.MemRead(mem_read_wire),
 	.MemtoReg(mem_to_reg_wire),
-	.MemWrite(mem_write_wire)
+	.MemWrite(mem_write_wire),
+	//JR
+	.ALUFunction(instruction_bus_wire[5:0])
 );
 
 PC_Register
@@ -207,8 +209,6 @@ ArithmeticLogicUnit
 	.A(read_data_1_wire),
 	.B(read_data_2_orr_inmmediate_wire),
 	.shamt(instruction_bus_wire[10:6]),
-	.pcounter(pc_wire),
-	.pcounter_new(pc_to_branch_wire),
 	.Zero(zero_wire),
 	.ALUResult(alu_result_wire)
 );
@@ -243,6 +243,22 @@ MUX_ForALUSourceOrRam
 	.MUX_Data1(read_data_wire),
 	
 	.MUX_Output(write_back_data_wire)
+
+);
+
+//JR
+
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+MUX_PC_From_ALU_Source
+(
+	.Selector(),
+	.MUX_Data0(),
+	.MUX_Data1(),
+	
+	.MUX_Output()
 
 );
 
