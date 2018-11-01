@@ -67,7 +67,7 @@ always@(OP or ALUFunction) begin
 		I_Type_SW:    ControlValues= 14'b000_0_100_01_00_100;
 		
 		J_Type_J:     ControlValues= 14'b010_0_000_00_00_111;
-		J_Type_JAL:   ControlValues= 14'b100_0_101_00_00_100;
+		J_Type_JAL:   ControlValues= 14'b110_0_001_00_00_100;
 		
 		default:
 			ControlValues= 14'b00000000000000;

@@ -68,6 +68,8 @@ wire [31:0] jumped_address_wire;
 wire jump_wire;
 wire jump_l_wire;
 wire [31:0] mux_jump_to_mux_jr_wire;
+wire [31:0] write_back_data_jal_wire;
+wire [4:0] write_register_mux_wire;
 // end JR, Jmp
 
 wire [2:0] aluop_wire;
@@ -171,10 +173,10 @@ Register_File
 	.clk(clk),
 	.reset(reset),
 	.RegWrite(reg_write_wire),
-	.WriteRegister(write_register_wire),
+	.WriteRegister(write_register_mux_wire), 
 	.ReadRegister1(instruction_bus_wire[25:21]),
 	.ReadRegister2(instruction_bus_wire[20:16]),
-	.WriteData(write_back_data_wire),
+	.WriteData(write_back_data_jal_wire),
 	.ReadData1(read_data_1_wire),
 	.ReadData2(read_data_2_wire)
 
@@ -299,6 +301,33 @@ MUX_PC_For_Jump
 	
 	.MUX_Output(mux_jump_to_mux_jr_wire)
 
+);
+
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+MUX_WriteBack_
+(
+	.Selector(jump_l_wire),
+	.MUX_Data0(write_back_data_wire),
+	.MUX_Data1(pc_plus_4_wire), //flag to see
+	
+	.MUX_Output(write_back_data_jal_wire)
+
+);
+
+Multiplexer2to1
+#(
+	.NBits(5)
+)
+MUX_Register_or_ra
+(
+	.Selector(jump_l_wire),
+	.MUX_Data0(write_register_wire), 	// registro normal ($rd o $rt)
+	.MUX_Data1(31),			// $ra
+	
+	.MUX_Output(write_register_mux_wire)
 );
 
 
