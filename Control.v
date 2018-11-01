@@ -48,16 +48,15 @@ localparam ALUF_JR     = 6'b001000;
 reg [13:0] ControlValues;
 
 always@(OP or ALUFunction) begin
-
-	if(OP == R_Type)
-			case(ALUFunction)
-				ALUF_JR: ControlValues= 14'b001_1_000_00_00_111;
-			
-			default:    ControlValues= 14'b000_1_001_00_00_111;
-			endcase
-
+	
 	casex(OP)
-		//R_Type:       ControlValues= 11'b1_001_00_00_111;
+		R_Type:    
+				if(ALUFunction == ALUF_JR) begin
+					ControlValues= 14'b001_1_000_00_00_111;
+				end
+            else begin
+					ControlValues= 14'b000_1_001_00_00_111;
+				end
 		I_Type_ADDI:  ControlValues= 14'b000_0_101_00_00_100;
 		I_Type_ORI:   ControlValues= 14'b000_0_101_00_00_101;
 		I_Type_LUI:   ControlValues= 14'b000_0_101_00_00_000;
@@ -72,6 +71,16 @@ always@(OP or ALUFunction) begin
 		default:
 			ControlValues= 14'b00000000000000;
 		endcase
+/*
+	if((OP[0] == R_Type[0]) && (OP[1] == R_Type[1]) && (OP[2] == R_Type[2]) && (OP[3] == R_Type[3]) &&
+	(OP[4] == R_Type[4]) && (OP[5] == R_Type[5]))
+			case(ALUFunction)
+				ALUF_JR: ControlValues= 14'b001_1_000_00_00_111;
+			
+			default:    ControlValues= 14'b000_1_001_00_00_111;
+			endcase*/
+
+	
 end	
 	
 assign JumpL    = ControlValues[13]; //Instruccion JAL	
