@@ -60,6 +60,11 @@ wire mem_read_wire;
 wire mem_to_reg_wire;
 wire mem_write_wire;
 // end LW, WS wires
+//JR, Jmp
+wire jump_r_wire
+wire [31:0] pc_direct_wire;
+// end JR, Jmp
+
 wire [2:0] aluop_wire;
 wire [3:0] alu_operation_wire;
 wire [4:0] write_register_wire;
@@ -98,7 +103,8 @@ ControlUnit
 	.MemtoReg(mem_to_reg_wire),
 	.MemWrite(mem_write_wire),
 	//JR
-	.ALUFunction(instruction_bus_wire[5:0])
+	.ALUFunction(instruction_bus_wire[5:0]),
+	.JumpR(jump_r_wire)
 );
 
 PC_Register
@@ -106,7 +112,7 @@ ProgramCounter
 (
 	.clk(clk),
 	.reset(reset),
-	.NewPC(pc_plus_4_wire),
+	.NewPC(pc_direct_wire),
 	.PCValue(pc_wire)
 );
 
@@ -254,11 +260,11 @@ Multiplexer2to1
 )
 MUX_PC_From_ALU_Source
 (
-	.Selector(),
-	.MUX_Data0(),
-	.MUX_Data1(),
+	.Selector(jump_r_wire),
+	.MUX_Data0(pc_plus_4_wire),
+	.MUX_Data1(read_data_1_wire),
 	
-	.MUX_Output()
+	.MUX_Output(pc_direct_wire)
 
 );
 
