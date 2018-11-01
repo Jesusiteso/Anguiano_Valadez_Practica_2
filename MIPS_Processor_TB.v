@@ -12,7 +12,7 @@
 *	12/06/2015
 ******************************************************************/
 
-module MIPS_Processor_2_TB;
+module MIPS_Processor_TB;
 reg clk = 0;
 reg reset = 0; 
 reg [7:0] PortIn; 
@@ -20,7 +20,7 @@ wire [31:0] ALUResultOut;
 wire [31:0] PortOut;
   
   
-MIPS_Processor_2
+MIPS_Processor
 DUV
 (
 	.clk(clk),

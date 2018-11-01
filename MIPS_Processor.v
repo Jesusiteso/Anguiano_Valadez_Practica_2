@@ -23,7 +23,7 @@
 ******************************************************************/
 
 
-module MIPS_Processor_2
+module MIPS_Processor
 #(
 	parameter MEMORY_DEPTH = 32,
 	parameter PC_INCREMENT = 4
@@ -61,8 +61,15 @@ wire mem_to_reg_wire;
 wire mem_write_wire;
 // end LW, WS wires
 //JR, Jmp
-wire jump_r_wire
+wire jump_r_wire;
 wire [31:0] pc_direct_wire;
+wire [27:0] jump_shift_wire;
+wire [31:0] jumped_address_wire;
+wire jump_wire;
+wire jump_l_wire;
+wire [31:0] mux_jump_to_mux_jr_wire;
+wire [31:0] write_back_data_jal_wire;
+wire [4:0] write_register_mux_wire;
 // end JR, Jmp
 
 wire [2:0] aluop_wire;
@@ -104,7 +111,9 @@ ControlUnit
 	.MemWrite(mem_write_wire),
 	//JR
 	.ALUFunction(instruction_bus_wire[5:0]),
-	.JumpR(jump_r_wire)
+	.JumpR(jump_r_wire),
+	.Jump(jump_wire),
+	.JumpL(jump_l_wire) //unconeccted
 );
 
 PC_Register
@@ -164,10 +173,10 @@ Register_File
 	.clk(clk),
 	.reset(reset),
 	.RegWrite(reg_write_wire),
-	.WriteRegister(write_register_wire),
+	.WriteRegister(write_register_mux_wire), 
 	.ReadRegister1(instruction_bus_wire[25:21]),
 	.ReadRegister2(instruction_bus_wire[20:16]),
-	.WriteData(write_back_data_wire),
+	.WriteData(write_back_data_jal_wire),
 	.ReadData1(read_data_1_wire),
 	.ReadData2(read_data_2_wire)
 
@@ -261,11 +270,64 @@ Multiplexer2to1
 MUX_PC_From_ALU_Source
 (
 	.Selector(jump_r_wire),
-	.MUX_Data0(pc_plus_4_wire),
+	.MUX_Data0(mux_jump_to_mux_jr_wire),
 	.MUX_Data1(read_data_1_wire),
 	
 	.MUX_Output(pc_direct_wire)
 
+);
+
+//J_Type
+
+ShiftLeft2
+JumpShift
+(
+	.DataInput(instruction_bus_wire[25:0]),
+	.DataOutput(jump_shift_wire)
+);
+
+assign jumped_address_wire = {pc_plus_4_wire[31:28],jump_shift_wire};
+
+
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+MUX_PC_For_Jump
+(
+	.Selector(jump_wire),
+	.MUX_Data0(pc_plus_4_wire),
+	.MUX_Data1(jumped_address_wire),
+	
+	.MUX_Output(mux_jump_to_mux_jr_wire)
+
+);
+
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+MUX_WriteBack_
+(
+	.Selector(jump_l_wire),
+	.MUX_Data0(write_back_data_wire),
+	.MUX_Data1(pc_plus_4_wire), //flag to see
+	
+	.MUX_Output(write_back_data_jal_wire)
+
+);
+
+Multiplexer2to1
+#(
+	.NBits(5)
+)
+MUX_Register_or_ra
+(
+	.Selector(jump_l_wire),
+	.MUX_Data0(write_register_wire), 	// registro normal ($rd o $rt)
+	.MUX_Data1(31),			// $ra
+	
+	.MUX_Output(write_register_mux_wire)
 );
 
 
