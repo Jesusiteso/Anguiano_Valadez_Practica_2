@@ -54,6 +54,12 @@ wire or_for_branch;
 wire alu_src_wire;
 wire reg_write_wire;
 wire zero_wire;
+
+//LW, SW wires
+wire mem_read_wire;
+wire mem_to_reg_wire;
+wire mem_write_wire;
+// end LW, WS wires
 wire [2:0] aluop_wire;
 wire [3:0] alu_operation_wire;
 wire [4:0] write_register_wire;
@@ -69,6 +75,9 @@ wire [31:0] pc_plus_4_wire;
 wire [31:0] inmmediate_extended_wire;
 wire [31:0] pc_to_branch_wire;
 
+wire [31:0] read_data_wire;
+wire [31:0] write_back_data_wire;
+
 //******************************************************************/
 //******************************************************************/
 //******************************************************************/
@@ -83,7 +92,11 @@ ControlUnit
 	.BranchEQ(branch_eq_wire),
 	.ALUOp(aluop_wire),
 	.ALUSrc(alu_src_wire),
-	.RegWrite(reg_write_wire)
+	.RegWrite(reg_write_wire),
+	//LW,SW wires
+	.MemRead(mem_read_wire),
+	.MemtoReg(mem_to_reg_wire),
+	.MemWrite(mem_write_wire)
 );
 
 PC_Register
@@ -146,7 +159,7 @@ Register_File
 	.WriteRegister(write_register_wire),
 	.ReadRegister1(instruction_bus_wire[25:21]),
 	.ReadRegister2(instruction_bus_wire[20:16]),
-	.WriteData(alu_result_wire),
+	.WriteData(write_back_data_wire),
 	.ReadData1(read_data_1_wire),
 	.ReadData2(read_data_2_wire)
 
@@ -199,6 +212,37 @@ ArithmeticLogicUnit
 );
 
 assign ALUResultOut = alu_result_wire;
+
+//Temp LW
+
+DataMemory
+#(
+	.MEMORY_DEPTH(MEMORY_DEPTH)
+)
+RAMDataMemory
+(
+	.WriteData(read_data_2_wire),
+	.Address(alu_result_wire),
+	.clk(clk),
+	.MemWrite(mem_write_wire),
+	.MemRead(mem_read_wire),
+	.ReadData(read_data_wire)
+);
+
+
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+MUX_ForALUSourceOrRam
+(
+	.Selector(mem_to_reg_wire),
+	.MUX_Data0(alu_result_wire),
+	.MUX_Data1(read_data_wire),
+	
+	.MUX_Output(write_back_data_wire)
+
+);
 
 
 endmodule
