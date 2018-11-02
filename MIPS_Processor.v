@@ -327,8 +327,8 @@ Multiplexer2to1
 MUX_Register_or_ra
 (
 	.Selector(jump_l_wire),
-	.MUX_Data0(write_register_wire), 	// registro normal ($rd o $rt)
-	.MUX_Data1(31),			// $ra
+	.MUX_Data0(write_register_wire), 	
+	.MUX_Data1(31),		
 	
 	.MUX_Output(write_register_mux_wire)
 );

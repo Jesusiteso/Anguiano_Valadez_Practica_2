@@ -15,7 +15,7 @@
 module ProgramMemory
 #
 (
-	parameter MEMORY_DEPTH=2048,
+	parameter MEMORY_DEPTH='h200,
 	parameter DATA_WIDTH=32
 )
 (
@@ -32,7 +32,7 @@ assign NewAddress = Address - 32'h0040_0000;
 assign RealAddress = {2'b0,NewAddress[(DATA_WIDTH-1):2]};
 
 	// Declare the ROM variable
-	reg [DATA_WIDTH-1:0] rom[MEMORY_DEPTH-1:0];
+	reg [DATA_WIDTH-1:0] rom['h200-1:0];
 
 	initial
 	begin

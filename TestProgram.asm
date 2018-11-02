@@ -14,6 +14,9 @@ Torre_3: .word 0 0 0 0 0 0 0 0
 
 Main:
 
+
+
+
 #Variables temporales y contadores
 #empty yet
 
@@ -28,6 +31,10 @@ ori $s3, $1, 0x00000040
 
 #Carga el numero de anillos
 addi $s0, $zero, 8
+
+# StackPointer initialization
+lui $1, 0x00001001
+ori $sp, $1, 0x00000200
 
 #Inicializa la torre source con los anillos correspondientes
 add $t0, $s0, $zero
