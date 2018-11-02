@@ -70,6 +70,9 @@ wire jump_l_wire;
 wire [31:0] mux_jump_to_mux_jr_wire;
 wire [31:0] write_back_data_jal_wire;
 wire [4:0] write_register_mux_wire;
+wire selector_branch_flag_wire;
+wire [31:0] branch_address_wire;
+wire [31:0] mux_branch_to_mux_jump_wire;
 // end JR, Jmp
 
 wire [2:0] aluop_wire;
@@ -296,7 +299,7 @@ Multiplexer2to1
 MUX_PC_For_Jump
 (
 	.Selector(jump_wire),
-	.MUX_Data0(pc_plus_4_wire),
+	.MUX_Data0(mux_branch_to_mux_jump_wire), //aqui va la salida de los branch
 	.MUX_Data1(jumped_address_wire),
 	
 	.MUX_Output(mux_jump_to_mux_jr_wire)
@@ -330,6 +333,25 @@ MUX_Register_or_ra
 	.MUX_Output(write_register_mux_wire)
 );
 
+//Branches
+
+
+assign selector_branch_flag_wire = (branch_ne_wire && !zero_wire ) || (branch_eq_wire && zero_wire);
+assign branch_address_wire = ( (Inmmediate_extend_wire<<2) + pc_plus_4_wire);
+
+Multiplexer2to1
+#(
+	.NBits(32)
+)
+MUX_Branch_or_PC
+(
+	.Selector(selector_branch_flag_wire),
+	.MUX_Data0(pc_plus_4_wire),
+	.MUX_Data1(branch_address_wire),//salida de los branch
+	
+	.MUX_Output(mux_branch_to_mux_jump_wire)
+
+);
 
 endmodule
 

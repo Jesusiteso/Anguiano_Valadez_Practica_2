@@ -8,6 +8,7 @@ add wave -noupdate /MIPS_Processor_TB/DUV/ProgramCounter/PCValue
 add wave -noupdate -divider testers
 add wave -noupdate /MIPS_Processor_TB/DUV/ROMProgramMemory/Instruction
 add wave -noupdate /MIPS_Processor_TB/DUV/ControlUnit/ControlValues
+add wave -noupdate /MIPS_Processor_TB/DUV/selector_branch_flag_wire
 add wave -noupdate -divider ALU
 add wave -noupdate /MIPS_Processor_TB/DUV/ArithmeticLogicUnit/A
 add wave -noupdate /MIPS_Processor_TB/DUV/ArithmeticLogicUnit/B
@@ -20,6 +21,8 @@ add wave -noupdate -label t3 /MIPS_Processor_TB/DUV/Register_File/Register_t3/Da
 add wave -noupdate -label t4 /MIPS_Processor_TB/DUV/Register_File/Register_t4/DataOutput
 add wave -noupdate -label s0 /MIPS_Processor_TB/DUV/Register_File/Register_s0/DataOutput
 add wave -noupdate -label s1 /MIPS_Processor_TB/DUV/Register_File/Register_s1/DataOutput
+add wave -noupdate -label s2 /MIPS_Processor_TB/DUV/Register_File/Register_s2/DataOutput
+add wave -noupdate -label s3 /MIPS_Processor_TB/DUV/Register_File/Register_s3/DataOutput
 add wave -noupdate -label ra /MIPS_Processor_TB/DUV/Register_File/Register_ra/DataOutput
 add wave -noupdate -divider Tower1
 add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[7]}
@@ -49,7 +52,7 @@ add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[18]}
 add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[17]}
 add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[16]}
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {5 ps} 0}
+WaveRestoreCursors {{Cursor 1} {14 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -65,4 +68,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {51 ps}
+WaveRestoreZoom {4 ps} {39 ps}
