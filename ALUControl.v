@@ -6,7 +6,7 @@
 * Version:
 *	1.0
 * Author:
-*	Dr. JosÃ© Luis Pizano Escalante
+*	Dr. JosÃƒÂ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:

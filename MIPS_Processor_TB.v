@@ -5,7 +5,7 @@
 * Version:
 *	1.0
 * Author:
-*	Dr. JosÃ© Luis Pizano Escalante
+*	Dr. JosÃƒÂ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:
@@ -20,7 +20,7 @@ wire [31:0] ALUResultOut;
 wire [31:0] PortOut;
   
   
-MIPS_Processor
+MIPS_Processor_2
 DUV
 (
 	.clk(clk),

@@ -1,4 +1,4 @@
 noview wave
 vsim work.MIPS_Processor_TB
-do C:/MIPS/MIPS_Processor_Practica/Sources/wave.do
+do D:/Omar/ALTERA/MIPS/Single_Cycle_P2/Sources/wave.do
 run 200

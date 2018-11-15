@@ -15,7 +15,7 @@
 * Version:
 *	1.5
 * Author:
-*	Dr. JosÃ© Luis Pizano Escalante
+*	Dr. JosÃƒÂ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:
@@ -23,7 +23,7 @@
 ******************************************************************/
 
 
-module MIPS_Processor
+module MIPS_Processor_2
 #(
 	parameter MEMORY_DEPTH = 32,
 	parameter PC_INCREMENT = 4
