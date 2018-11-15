@@ -20,18 +20,18 @@ module IF_ID
 	input clk,
 	input reset,
 
-	input [32:0] IN_PC_Conter_Plus_4,
-	input [32:0] IN_Instruction_Wire,
+	input [31:0] IN_PC_Conter_Plus_4,
+	input [31:0] IN_Instruction_Wire,
 
-	output [32:0] OUT_PC_Conter_Plus_4,
-	output [32:0] OUT_Instruction_Wire
+	output [31:0] OUT_PC_Conter_Plus_4,
+	output [31:0] OUT_Instruction_Wire
 
 );
 
 Register
 PC_Conter_Plus_4
 (
-	.clk(~clk),
+	.clk(clk),
 	.reset(reset),
 	.enable(1),
 	.DataInput(IN_PC_Conter_Plus_4),
@@ -41,7 +41,7 @@ PC_Conter_Plus_4
 Register
 Instruction_Wire
 (
-	.clk(~clk),
+	.clk(clk),
 	.reset(reset),
 	.enable(1),
 	.DataInput(IN_Instruction_Wire),
