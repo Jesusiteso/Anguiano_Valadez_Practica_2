@@ -74,6 +74,10 @@ wire selector_branch_flag_wire;
 wire [31:0] branch_address_wire;
 wire [31:0] mux_branch_to_mux_jump_wire;
 // end JR, Jmp
+//Pipeline wires
+wire [31:0] pc_plus_4_to_if_id;
+wire [31:0] instruction_wire_to_if_id;
+//Pipeline wire end
 
 wire [2:0] aluop_wire;
 wire [3:0] alu_operation_wire;
@@ -136,7 +140,7 @@ ProgramMemory
 ROMProgramMemory
 (
 	.Address(pc_wire),
-	.Instruction(instruction_bus_wire)
+	.Instruction(instruction_wire_to_if_id)
 );
 
 Adder32bits
@@ -145,7 +149,7 @@ PC_Puls_4
 	.Data0(pc_wire),
 	.Data1(PC_INCREMENT),
 	
-	.Result(pc_plus_4_wire)
+	.Result(pc_plus_4_to_if_id)
 );
 
 
@@ -351,6 +355,20 @@ MUX_Branch_or_PC
 	
 	.MUX_Output(mux_branch_to_mux_jump_wire)
 
+);
+
+IF_ID
+IF_ID_Stage
+(
+	.clk(clk),
+	.reset(reset),
+	
+
+	.IN_PC_Conter_Plus_4(pc_plus_4_to_if_id),
+	.IN_Instruction_Wire(instruction_wire_to_if_id),
+
+	.OUT_PC_Conter_Plus_4(pc_plus_4_wire),
+	.OUT_Instruction_Wire(instruction_bus_wire)
 );
 
 endmodule
