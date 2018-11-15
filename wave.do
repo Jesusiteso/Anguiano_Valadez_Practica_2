@@ -25,35 +25,15 @@ add wave -noupdate -label s2 /MIPS_Processor_TB/DUV/Register_File/Register_s2/Da
 add wave -noupdate -label s3 /MIPS_Processor_TB/DUV/Register_File/Register_s3/DataOutput
 add wave -noupdate -label ra /MIPS_Processor_TB/DUV/Register_File/Register_ra/DataOutput
 add wave -noupdate -label sp /MIPS_Processor_TB/DUV/Register_File/Register_sp/DataOutput
-add wave -noupdate -divider Tower1
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[7]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[6]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[5]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[4]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[3]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[2]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[1]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[0]}
-add wave -noupdate -divider Tower2
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[15]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[14]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[13]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[12]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[11]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[10]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[9]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[8]}
-add wave -noupdate -divider Tower3
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[23]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[22]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[21]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[20]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[19]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[18]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[17]}
-add wave -noupdate {/MIPS_Processor_TB/DUV/RAMDataMemory/ram[16]}
+add wave -noupdate -divider IF_ID
+add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/clk
+add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/reset
+add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/IN_PC_Conter_Plus_4
+add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/IN_Instruction_Wire
+add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/OUT_PC_Conter_Plus_4
+add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/OUT_Instruction_Wire
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {304 ps} 0}
+WaveRestoreCursors {{Cursor 1} {1 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -69,4 +49,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {291 ps} {373 ps}
+WaveRestoreZoom {0 ps} {30 ps}
