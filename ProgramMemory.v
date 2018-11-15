@@ -6,7 +6,7 @@
 * Version:
 *	1.0
 * Author:
-*	Dr. José Luis Pizano Escalante
+*	Dr. JosÃ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:
@@ -15,7 +15,7 @@
 module ProgramMemory
 #
 (
-	parameter MEMORY_DEPTH=32,
+	parameter MEMORY_DEPTH='h200,
 	parameter DATA_WIDTH=32
 )
 (
@@ -24,14 +24,19 @@ module ProgramMemory
 );
 wire [(DATA_WIDTH-1):0] RealAddress;
 
-assign RealAddress = {2'b0,Address[(DATA_WIDTH-1):2]};
+wire [(DATA_WIDTH-1):0] NewAddress;
+
+//Recorre a la memoria del programa
+assign NewAddress = Address - 32'h0040_0000;
+
+assign RealAddress = {2'b0,NewAddress[(DATA_WIDTH-1):2]};
 
 	// Declare the ROM variable
-	reg [DATA_WIDTH-1:0] rom[MEMORY_DEPTH-1:0];
+	reg [DATA_WIDTH-1:0] rom['h200-1:0];
 
 	initial
 	begin
-		$readmemh("C:/MIPS/Basic_MIPS_Processor/Source/text.dat", rom);
+		$readmemh("C:/MIPS/MIPS_Processor_Practica/Sources/text.dat", rom);
 	end
 
 	always @ (RealAddress)

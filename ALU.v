@@ -10,7 +10,7 @@
 * Version:
 *	1.0
 * Author:
-*	Dr. José Luis Pizano Escalante
+*	Dr. JosÃ© Luis Pizano Escalante
 * email:
 *	luispizano@iteso.mx
 * Date:
@@ -34,6 +34,7 @@ localparam SUB = 4'b0100;
 localparam LUI = 4'b0101;
 localparam SLL = 4'b0110;
 localparam SRL = 4'b0111;
+
    
    always @ (A or B or ALUOperation)
      begin
