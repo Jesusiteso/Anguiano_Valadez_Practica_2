@@ -23,7 +23,7 @@
 ******************************************************************/
 
 
-module MIPS_Processor
+module MIPS_Processor_2
 #(
 	parameter MEMORY_DEPTH = 32,
 	parameter PC_INCREMENT = 4
