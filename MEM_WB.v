@@ -31,7 +31,7 @@ module MEM_WB
 	output OUT_MemRead,
 	output OUT_RegWrite,
 	output [31:0] OUT_DataMemory_Data,
-	output [31:0] OUT_ALUResult,
+	output [31:0] OUT_ALUResult
 );
 
 
