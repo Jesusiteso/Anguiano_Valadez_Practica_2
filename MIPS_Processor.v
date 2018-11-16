@@ -78,7 +78,43 @@ wire [31:0] mux_branch_to_mux_jump_wire;
 wire [31:0] pc_plus_4_to_if_id;
 wire [31:0] instruction_wire_to_if_id;
 //ID_EX
-wire [13:0] controlvalues_wire;
+
+wire [2:0] idex_aluop_wire;
+wire idex_alusrc_wire;
+wire idex_regdst_wire;
+wire [31:0] idex_read_data_1_wire;
+wire [31:0] idex_read_data_2_wire;
+wire [31:0] idex_signextend_instruction_wire;
+wire [4:0] idex_rt_to_regdest_wire;
+wire [4:0] idex_rd_to_regdest_wire;
+wire [5:0] idex_alucontrol_values_wire;
+
+wire idex_to_exmem_beq_wire;
+wire idex_to_exmem_bne_wire;
+wire idex_to_exmem_memread_wire;
+wire idex_to_exmem_memwrite_wire;
+wire idex_to_exmem_memtoreg_wire;
+wire idex_to_exmem_regwrite_wire;
+
+//EX_MEM
+
+wire exmem_memread_wire;
+wire exmem_memwrite_wire;
+//wire exmem_aluzero_wire; //branch
+wire [31:0] exmem_readdata2_wire;
+wire [31:0] exmem_ALUResult;
+
+wire [4:0] exmem_to_memwb_witeregisterdata_wire;
+wire exmem_to_memwb_memtoreg_wire;
+wire exmem_to_memwb_regwrite_wire;
+
+//MEM_WB
+wire memwb_memtoreg_wire;
+wire memwb_regwrite_wire;
+
+wire [31:0] memwb_datamemory_data_wire;
+wire [31:0] memwb_aluresult_wire;
+wire [4:0] memwb_writeregisterdata_wire;
 
 //Pipeline wire end
 
@@ -167,9 +203,9 @@ Multiplexer2to1
 )
 MUX_ForRTypeAndIType
 (
-	.Selector(reg_dst_wire),
-	.MUX_Data0(instruction_bus_wire[20:16]),
-	.MUX_Data1(instruction_bus_wire[15:11]),
+	.Selector(idex_regdst_wire),
+	.MUX_Data0(idex_rt_to_regdest_wire),
+	.MUX_Data1(idex_rd_to_regdest_wire),
 	
 	.MUX_Output(write_register_wire)
 
@@ -182,7 +218,7 @@ Register_File
 (
 	.clk(clk),
 	.reset(reset),
-	.RegWrite(reg_write_wire),
+	.RegWrite(memwb_regwrite_wire),
 	.WriteRegister(write_register_mux_wire), 
 	.ReadRegister1(instruction_bus_wire[25:21]),
 	.ReadRegister2(instruction_bus_wire[20:16]),
@@ -207,9 +243,9 @@ Multiplexer2to1
 )
 MUX_ForReadDataAndInmediate
 (
-	.Selector(alu_src_wire),
-	.MUX_Data0(read_data_2_wire),
-	.MUX_Data1(Inmmediate_extend_wire),
+	.Selector(idex_alusrc_wire),
+	.MUX_Data0(idex_read_data_2_wire),
+	.MUX_Data1(idex_signextend_instruction_wire),
 	
 	.MUX_Output(read_data_2_orr_inmmediate_wire)
 
@@ -219,8 +255,8 @@ MUX_ForReadDataAndInmediate
 ALUControl
 ArithmeticLogicUnitControl
 (
-	.ALUOp(aluop_wire),
-	.ALUFunction(instruction_bus_wire[5:0]),
+	.ALUOp(idex_aluop_wire),
+	.ALUFunction(idex_alucontrol_values_wire),
 	.ALUOperation(alu_operation_wire)
 
 );
@@ -231,7 +267,7 @@ ALU
 ArithmeticLogicUnit 
 (
 	.ALUOperation(alu_operation_wire),
-	.A(read_data_1_wire),
+	.A(idex_read_data_1_wire),
 	.B(read_data_2_orr_inmmediate_wire),
 	.shamt(instruction_bus_wire[10:6]),
 	.Zero(zero_wire),
@@ -248,11 +284,11 @@ DataMemory
 )
 RAMDataMemory
 (
-	.WriteData(read_data_2_wire),
-	.Address(alu_result_wire),
+	.WriteData(exmem_readdata2_wire),
+	.Address(exmem_ALUResult),
 	.clk(clk),
-	.MemWrite(mem_write_wire),
-	.MemRead(mem_read_wire),
+	.MemWrite(exmem_memwrite_wire),
+	.MemRead(exmem_memread_wire),
 	.ReadData(read_data_wire)
 );
 
@@ -263,9 +299,9 @@ Multiplexer2to1
 )
 MUX_ForALUSourceOrRam
 (
-	.Selector(mem_to_reg_wire),
-	.MUX_Data0(alu_result_wire),
-	.MUX_Data1(read_data_wire),
+	.Selector(memwb_memtoreg_wire),
+	.MUX_Data0(memwb_aluresult_wire),
+	.MUX_Data1(memwb_datamemory_data_wire),
 	
 	.MUX_Output(write_back_data_wire)
 
@@ -334,7 +370,7 @@ Multiplexer2to1
 MUX_Register_or_ra
 (
 	.Selector(jump_l_wire),
-	.MUX_Data0(write_register_wire), 	
+	.MUX_Data0(memwb_writeregisterdata_wire), //write register data	
 	.MUX_Data1(31),		
 	
 	.MUX_Output(write_register_mux_wire)
@@ -373,18 +409,6 @@ IF_ID_Stage
 	.OUT_Instruction_Wire(instruction_bus_wire)
 );
 
-assign controlvalues_wire[2:0] = aluop_wire;
-assign controlvalues_wire[3] = branch_eq_wire;
-assign controlvalues_wire[4] = branch_ne_wire;
-assign controlvalues_wire[5] = mem_write_wire;
-assign controlvalues_wire[6] = mem_read_wire;
-assign controlvalues_wire[7] = reg_write_wire;
-assign controlvalues_wire[8] = mem_to_reg_wire;
-assign controlvalues_wire[9] = alu_src_wire;
-assign controlvalues_wire[10] = reg_dst_wire;
-assign controlvalues_wire[11] = jump_r_wire;
-assign controlvalues_wire[12] = jump_wire;
-assign controlvalues_wire[13] = jump_l_wire;
 
 ID_EX
 ID_EX_Stage
@@ -392,28 +416,55 @@ ID_EX_Stage
 	.clk(clk),
 	.reset(reset),
 	//All control Values
-	.IN_ControlValues(controlvalues_wire),
+	//.IN_ControlValues(controlvalues_wire),
+	.IN_ALUOP     (aluop_wire), //2:0
+	.IN_Branch_EQ (branch_eq_wire),
+	.IN_Branch_NE (branch_ne_wire),
+	.IN_MemWrite  (mem_write_wire),
+	.IN_MemRead   (mem_read_wire),
+	.IN_RegWrite  (reg_write_wire),
+	.IN_MemToReg  (mem_to_reg_wire),
+	.IN_ALUSrc    (alu_src_wire),
+	.IN_RegDst    (reg_dst_wire),
+	.IN_Jump_r    (jump_r_wire),
+	.IN_Jump      (jump_wire),
+	.IN_Jump_l    (jump_l_wire),
 	//PC_wire
-	.IN_PC_Conter_Plus_4(), //[31:0]
+	.IN_PC_Conter_Plus_4(pc_plus_4_to_if_id), //[31:0]
 	//Read Datas
-	.IN_Read_Data_1, //[31:0]
-	.IN_Read_Data_2, //[31:0]
+	.IN_Read_Data_1(read_data_1_wire), //[31:0]
+	.IN_Read_Data_2(read_data_2_wire), //[31:0]
 	//Instruction wires
-	.IN_SignExtended_Instruction, //[15:0]
-	.IN_RT_To_RegDst, //[20:16]
-	.IN_RD_To_RegDst, //[15:11]
-	.IN_ALUControl_Values, //[5:0]
+	.IN_SignExtended_Instruction(Inmmediate_extend_wire), //[31:0]
+	.IN_RT_To_RegDst(instruction_bus_wire[20:16]), //[20:16]
+	.IN_RD_To_RegDst(instruction_bus_wire[15:11]), //[15:11]
+	.IN_ALUControl_Values(instruction_bus_wire[5:0]), //[5:0]
 	
 	//outputs
-	.OUT_ControlValues(),
-	.OUT_PC_Conter_Plus_4(), //[31:0]
-	.OUT_Read_Data_1, //[31:0]
-	.OUT_Read_Data_2, //[31:0]
-	.OUT_SignExtended_Instruction, //[15:0]
-	.OUT_RT_To_RegDst, //[20:16]
-	.OUT_RD_To_RegDst, //[15:11]
-	.OUT_ALUControl_Values //[5:0]
+	//.OUT_ControlValues(),
+	.OUT_ALUOP(idex_aluop_wire), //2:0
+	.OUT_Branch_EQ(idex_to_exmem_beq_wire),
+	.OUT_Branch_NE(idex_to_exmem_bne_wire),
+	.OUT_MemWrite(idex_to_exmem_memwrite_wire),
+	.OUT_MemRead(idex_to_exmem_memread_wire),
+	.OUT_RegWrite(idex_to_exmem_regwrite_wire),
+	.OUT_MemToReg(idex_to_exmem_memtoreg_wire),
+	.OUT_ALUSrc(idex_alusrc_wire),
+	.OUT_RegDst(idex_regdst_wire),
+//	.OUT_Jump_r(),
+//	.OUT_Jump(),
+//	.OUT_Jump_l(),
+	
+//	.OUT_PC_Conter_Plus_4(), //[31:0]
+	.OUT_Read_Data_1(idex_read_data_1_wire), //[31:0]
+	.OUT_Read_Data_2(idex_read_data_2_wire), //[31:0]
+	.OUT_SignExtended_Instruction(idex_signextend_instruction_wire), //[31:0]
+	.OUT_RT_To_RegDst(idex_rt_to_regdest_wire), //[20:16]
+	.OUT_RD_To_RegDst(idex_rd_to_regdest_wire), //[15:11]
+	.OUT_ALUControl_Values(idex_alucontrol_values_wire) //[5:0]
 );
+
+
 
 EX_MEM
 EX_MEM_Stage
@@ -421,23 +472,35 @@ EX_MEM_Stage
 	.clk(clk),
 	.reset(reset),
 	
-	.IN_ALUResult(),
-	.IN_ALU_Zero(),
-	.IN_RegDest(),//  [4:0]
-	.IN_ReadData(),// [31:0]
-	.IN_BEQ_Wire(),
-	.IN_BNE_Wire(),
-	.IN_ADD_Result(), //[31:0]
+	.IN_BEQ(idex_to_exmem_beq_wire),
+	.IN_BNE(idex_to_exmem_bne_wire),
+	.IN_MemRead(idex_to_exmem_memread_wire),
+	.IN_MemWrite(idex_to_exmem_memwrite_wire),
+	.IN_MemToReg(idex_to_exmem_memtoreg_wire),
+	.IN_RegWrite(idex_to_exmem_regwrite_wire),
 	
-	//ouputs
-	.OUT_ALUResult(),
-	.OUT_ALU_Zero(),
-	.OUT_RegDest(),//  [4:0]
-	.OUT_ReadData(),// [31:0]
-	.OUT_BEQ_Wire(),
-	.OUT_BNE_Wire(),
-	.OUT_ADD_Result() //[31:0]
+	.IN_ALUResult(alu_result_wire), //31:0
+	.IN_ALUZero(zero_wire),
+//	.IN_Added_Address(),
+	.IN_ReadData2(idex_read_data_2_wire), //31:0
+	.IN_WriteRegisterData(write_register_wire), //4:0
+	
+	//outputs
+//	.OUT_BEQ(),
+//	.OUT_BNE(),
+	.OUT_MemRead(exmem_memread_wire),
+	.OUT_MemWrite(exmem_memwrite_wire),
+	.OUT_MemToReg(exmem_to_memwb_memtoreg_wire),
+	.OUT_RegWrite(exmem_to_memwb_regwrite_wire),
+	.OUT_ALUResult(exmem_ALUResult), //31:0
+//	.OUT_ALUZero(),
+//	.OUT_Added_Address(),
+	.OUT_ReadData2(exmem_readdata2_wire), //31:0
+	.OUT_WriteRegisterData(exmem_to_memwb_witeregisterdata_wire) //4:0
+	
 );
+
+
 
 MEM_WB
 MEM_WB_Stage
@@ -445,16 +508,20 @@ MEM_WB_Stage
 	.clk(clk),
 	.reset(reset),
 	
-	.IN_MemRead(),
-	.IN_RegWrite(),
-	.IN_DataMemory_Data(), //[31:0]
-	.IN_ALUResult(), //[31:0] 
+	.IN_MemToReg(exmem_to_memwb_memtoreg_wire),
+	.IN_RegWrite(exmem_to_memwb_regwrite_wire),
+	.IN_DataMemory_Data(read_data_wire), //[31:0]
+	.IN_ALUResult(exmem_ALUResult), //[31:0] 
+	.IN_WriteRegisterData(exmem_to_memwb_witeregisterdata_wire),
 	//outputs
-	.OUT_MemRead(),
-	.OUT_RegWrite(),
-	.OUT_DataMemory_Data(), //[31:0]
-	.OUT_ALUResult() //[31:0]
+	.OUT_MemToReg(memwb_memtoreg_wire),
+	.OUT_RegWrite(memwb_regwrite_wire),
+	.OUT_DataMemory_Data(memwb_datamemory_data_wire), //[31:0]
+	.OUT_ALUResult(memwb_aluresult_wire), //[31:0]
+	.OUT_WriteRegisterData(memwb_writeregisterdata_wire)
 );
+
+
 
 endmodule
 
