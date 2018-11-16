@@ -77,6 +77,9 @@ wire [31:0] mux_branch_to_mux_jump_wire;
 //Pipeline wires
 wire [31:0] pc_plus_4_to_if_id;
 wire [31:0] instruction_wire_to_if_id;
+//ID_EX
+wire [13:0] controlvalues_wire;
+
 //Pipeline wire end
 
 wire [2:0] aluop_wire;
@@ -363,13 +366,101 @@ IF_ID_Stage
 	.clk(clk),
 	.reset(reset),
 	
-
 	.IN_PC_Conter_Plus_4(pc_plus_4_wire),
 	.IN_Instruction_Wire(instruction_wire_to_if_id),
-
+//outputs
 	.OUT_PC_Conter_Plus_4(pc_plus_4_to_if_id),
 	.OUT_Instruction_Wire(instruction_bus_wire)
 );
 
+assign controlvalues_wire[2:0] = aluop_wire;
+assign controlvalues_wire[3] = branch_eq_wire;
+assign controlvalues_wire[4] = branch_ne_wire;
+assign controlvalues_wire[5] = mem_write_wire;
+assign controlvalues_wire[6] = mem_read_wire;
+assign controlvalues_wire[7] = reg_write_wire;
+assign controlvalues_wire[8] = mem_to_reg_wire;
+assign controlvalues_wire[9] = alu_src_wire;
+assign controlvalues_wire[10] = reg_dst_wire;
+assign controlvalues_wire[11] = jump_r_wire;
+assign controlvalues_wire[12] = jump_wire;
+assign controlvalues_wire[13] = jump_l_wire;
+
+ID_EX
+ID_EX_Stage
+(
+	.clk(clk),
+	.reset(reset),
+	//All control Values
+	.IN_ControlValues(controlvalues_wire),
+	//PC_wire
+	.IN_PC_Conter_Plus_4(), //[31:0]
+	//Read Datas
+	.IN_Read_Data_1, //[31:0]
+	.IN_Read_Data_2, //[31:0]
+	//Instruction wires
+	.IN_SignExtended_Instruction, //[15:0]
+	.IN_RT_To_RegDst, //[20:16]
+	.IN_RD_To_RegDst, //[15:11]
+	.IN_ALUControl_Values, //[5:0]
+	
+	//outputs
+	.OUT_ControlValues(),
+	.OUT_PC_Conter_Plus_4(), //[31:0]
+	.OUT_Read_Data_1, //[31:0]
+	.OUT_Read_Data_2, //[31:0]
+	.OUT_SignExtended_Instruction, //[15:0]
+	.OUT_RT_To_RegDst, //[20:16]
+	.OUT_RD_To_RegDst, //[15:11]
+	.OUT_ALUControl_Values //[5:0]
+);
+
+EX_MEM
+EX_MEM_Stage
+(
+	.clk(clk),
+	.reset(reset),
+	
+	.IN_ALUResult(),
+	.IN_ALU_Zero(),
+	.IN_RegDest(),//  [4:0]
+	.IN_ReadData(),// [31:0]
+	.IN_BEQ_Wire(),
+	.IN_BNE_Wire(),
+	.IN_ADD_Result(), //[31:0]
+	
+	//ouputs
+	.OUT_ALUResult(),
+	.OUT_ALU_Zero(),
+	.OUT_RegDest(),//  [4:0]
+	.OUT_ReadData(),// [31:0]
+	.OUT_BEQ_Wire(),
+	.OUT_BNE_Wire(),
+	.OUT_ADD_Result() //[31:0]
+);
+
+MEM_WB
+MEM_WB_Stage
+(
+	.clk(clk),
+	.reset(reset),
+	
+	.IN_MemRead(),
+	.IN_RegWrite(),
+	.IN_DataMemory_Data(), //[31:0]
+	.IN_ALUResult(), //[31:0] 
+	//outputs
+	.OUT_MemRead(),
+	.OUT_RegWrite(),
+	.OUT_DataMemory_Data(), //[31:0]
+	.OUT_ALUResult() //[31:0]
+);
+
 endmodule
+
+
+
+
+
+
 
