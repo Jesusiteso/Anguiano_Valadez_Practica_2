@@ -1,3 +1,6 @@
+
+
+
 module Register_Pipe
 #(
 	parameter N=32
@@ -6,10 +9,10 @@ module Register_Pipe
 	input clk,
 	input reset,
 	input enable,
-	input  [N-1:0] DataInput,
+	input  [32-1:0] DataInput,
 	
 	
-	output reg [N-1:0] DataOutput
+	output reg [32-1:0] DataOutput
 );
 
 always@(negedge reset or negedge clk) begin
