@@ -23,6 +23,7 @@ add wave -noupdate -label s0 /MIPS_Processor_TB/DUV/Register_File/Register_s0/Da
 add wave -noupdate -label s1 /MIPS_Processor_TB/DUV/Register_File/Register_s1/DataOutput
 add wave -noupdate -label s2 /MIPS_Processor_TB/DUV/Register_File/Register_s2/DataOutput
 add wave -noupdate -label s3 /MIPS_Processor_TB/DUV/Register_File/Register_s3/DataOutput
+add wave -noupdate -label s7 /MIPS_Processor_TB/DUV/Register_File/Register_s7/DataOutput
 add wave -noupdate -label ra /MIPS_Processor_TB/DUV/Register_File/Register_ra/DataOutput
 add wave -noupdate -label sp /MIPS_Processor_TB/DUV/Register_File/Register_sp/DataOutput
 add wave -noupdate -divider IF_ID
@@ -33,7 +34,7 @@ add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/IN_Instruction_Wire
 add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/OUT_PC_Conter_Plus_4
 add wave -noupdate /MIPS_Processor_TB/DUV/IF_ID_Stage/OUT_Instruction_Wire
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1 ps} 0}
+WaveRestoreCursors {{Cursor 1} {52 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -49,4 +50,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {30 ps}
+WaveRestoreZoom {46 ps} {103 ps}
