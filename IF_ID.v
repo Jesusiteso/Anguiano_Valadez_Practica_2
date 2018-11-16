@@ -38,7 +38,7 @@ PC_Conter_Plus_4
 	.DataOutput(OUT_PC_Conter_Plus_4)
 );
 
-Register
+Register_Pipe
 Instruction_Wire
 (
 	.clk(clk),
