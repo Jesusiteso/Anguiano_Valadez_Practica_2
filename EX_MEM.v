@@ -5,24 +5,101 @@ module EX_MEM
 (
 	input clk,
 	input reset,
+	//ControlValues
+//M	
+	input IN_BEQ,
+	input IN_BNE,
+	input IN_MemRead,
+	input IN_MemWrite,
+//WB
+	input IN_MemToReg,
+	input IN_RegWrite,
 	
-	input[31:0] IN_ALUResult,//
-	input IN_ALU_Zero,//
-	input[4:0] IN_RegDest,//
-	input[31:0] IN_ReadData,//
-	input IN_BEQ_Wire,
-	input IN_BNE_Wire,
-	input[31:0] IN_ADD_Result,
-	
-	output[31:0] OUT_ALUResult, //ALU
-	output OUT_ALU_Zero,//
-	output[4:0] OUT_RegDest,//
-	output[31:0] OUT_ReadData,//
-	output OUT_BEQ_Wire,
-	output OUT_BNE_Wire,
-	output[31:0] OUT_ADD_Result
+	//ALU
+	input [31:0] IN_ALUResult,
+	input IN_ALUZero,
+	input IN_Added_Address,
+	//datas
+	input [31:0] IN_ReadData2,
+	input [4:0] IN_WriteRegisterData,
+
+	//outputs
+	output OUT_BEQ,
+	output OUT_BNE,
+	output OUT_MemRead,
+	output OUT_MemWrite,
+	output OUT_MemToReg,
+	output OUT_RegWrite,
+	output [31:0] OUT_ALUResult,
+	output OUT_ALUZero,
+	output OUT_Added_Address,
+	output [31:0] OUT_ReadData2,
+	output [4:0] OUT_WriteRegisterData
 	
 );
+
+
+
+Register_Pipe
+BEQ
+(
+	.clk(clk),
+	.reset(reset),
+	.enable(1),
+	.DataInput(IN_BEQ),
+	.DataOutput(OUT_BEQ)
+);
+
+Register_Pipe
+BNE
+(
+	.clk(clk),
+	.reset(reset),
+	.enable(1),
+	.DataInput(IN_BNE),
+	.DataOutput(OUT_BNE)
+);
+
+Register_Pipe
+MemRead
+(
+	.clk(clk),
+	.reset(reset),
+	.enable(1),
+	.DataInput(IN_MemRead),
+	.DataOutput(OUT_MemRead)
+);
+
+Register_Pipe
+MemWrite
+(
+	.clk(clk),
+	.reset(reset),
+	.enable(1),
+	.DataInput(IN_MemWrite),
+	.DataOutput(OUT_MemWrite)
+);
+
+Register_Pipe
+MemToReg
+(
+	.clk(clk),
+	.reset(reset),
+	.enable(1),
+	.DataInput(IN_MemToReg),
+	.DataOutput(OUT_MemToReg)
+);
+
+Register_Pipe
+RegWrite
+(
+	.clk(clk),
+	.reset(reset),
+	.enable(1),
+	.DataInput(IN_RegWrite),
+	.DataOutput(OUT_RegWrite)
+);
+
 Register_Pipe
 ALUResult
 (
@@ -32,59 +109,47 @@ ALUResult
 	.DataInput(IN_ALUResult),
 	.DataOutput(OUT_ALUResult)
 );
+
 Register_Pipe
-ALU_Zero
+ALUZero
 (
 	.clk(clk),
 	.reset(reset),
 	.enable(1),
-	.DataInput(IN_ALU_Zero),
-	.DataOutput(OUT_ALU_Zero)
+	.DataInput(IN_ALUZero),
+	.DataOutput(OUT_ALUZero)
 );
+
 Register_Pipe
-RegDest
+Added_Address
 (
 	.clk(clk),
 	.reset(reset),
 	.enable(1),
-	.DataInput(IN_RegDest),
-	.DataOutput(OUT_RegDest)
+	.DataInput(IN_Added_Address),
+	.DataOutput(OUT_Added_Address)
 );
+
 Register_Pipe
-ReadData
+ReadData2
 (
 	.clk(clk),
 	.reset(reset),
 	.enable(1),
-	.DataInput(IN_ReadData),
-	.DataOutput(OUT_ReadData)
+	.DataInput(IN_ReadData2),
+	.DataOutput(OUT_ReadData2)
 );
+
 Register_Pipe
-BEQ_Wire
+WriteRegisterData
 (
 	.clk(clk),
 	.reset(reset),
 	.enable(1),
-	.DataInput(IN_BEQ_Wire),
-	.DataOutput(OUT_BEQ_Wire)
+	.DataInput(IN_WriteRegisterData),
+	.DataOutput(OUT_WriteRegisterData)
 );
-Register_Pipe
-BNE_Wire
-(
-	.clk(clk),
-	.reset(reset),
-	.enable(1),
-	.DataInput(IN_BNE_Wire),
-	.DataOutput(OUT_BNE_Wire)
-);
-Register_Pipe
-ADD_Result
-(
-	.clk(clk),
-	.reset(reset),
-	.enable(1),
-	.DataInput(IN_ADD_Result),
-	.DataOutput(OUT_ADD_Result)
-);
+
+
 
 endmodule 
