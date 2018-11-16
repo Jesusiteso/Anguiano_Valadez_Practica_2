@@ -23,7 +23,7 @@
 ******************************************************************/
 
 
-module MIPS_Processor_2
+module MIPS_Processor
 #(
 	parameter MEMORY_DEPTH = 32,
 	parameter PC_INCREMENT = 4
@@ -149,7 +149,7 @@ PC_Puls_4
 	.Data0(pc_wire),
 	.Data1(PC_INCREMENT),
 	
-	.Result(pc_plus_4_to_if_id)
+	.Result(pc_plus_4_wire)
 );
 
 
@@ -364,10 +364,10 @@ IF_ID_Stage
 	.reset(reset),
 	
 
-	.IN_PC_Conter_Plus_4(pc_plus_4_to_if_id),
+	.IN_PC_Conter_Plus_4(pc_plus_4_wire),
 	.IN_Instruction_Wire(instruction_wire_to_if_id),
 
-	.OUT_PC_Conter_Plus_4(pc_plus_4_wire),
+	.OUT_PC_Conter_Plus_4(pc_plus_4_to_if_id),
 	.OUT_Instruction_Wire(instruction_bus_wire)
 );
 
