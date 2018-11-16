@@ -20,29 +20,31 @@ module MEM_WB
 	input clk,
 	input reset,
 	//WB_ControlValues
-	input IN_MemRead,
+	input IN_MemToReg,
 	input IN_RegWrite,
 	//Data memory
 	input [31:0] IN_DataMemory_Data,
 	//Output of ALU
 	input [31:0] IN_ALUResult,
+	input [4:0] IN_WriteRegisterData,
 
 	//Outputs
-	output OUT_MemRead,
+	output OUT_MemToReg,
 	output OUT_RegWrite,
 	output [31:0] OUT_DataMemory_Data,
-	output [31:0] OUT_ALUResult
+	output [31:0] OUT_ALUResult,
+	output [4:0] OUT_WriteRegisterData
 );
 
 
 Register_Pipe
-MemRead
+MemToReg
 (
 	.clk(clk),
 	.reset(reset),
 	.enable(1),
-	.DataInput(IN_MemRead),
-	.DataOutput(OUT_MemRead)
+	.DataInput(IN_MemToReg),
+	.DataOutput(OUT_MemToReg)
 );
 
 Register_Pipe
@@ -74,5 +76,16 @@ ALUResult
 	.DataInput(IN_ALUResult),
 	.DataOutput(OUT_ALUResult)
 );
+
+Register_Pipe
+WriteRegisterData
+(
+	.clk(clk),
+	.reset(reset),
+	.enable(1),
+	.DataInput(IN_WriteRegisterData),
+	.DataOutput(OUT_WriteRegisterData)
+);
+
 
 endmodule 
