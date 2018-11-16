@@ -75,8 +75,14 @@ wire [31:0] branch_address_wire;
 wire [31:0] mux_branch_to_mux_jump_wire;
 // end JR, Jmp
 //Pipeline wires
+//IF/ID
 wire [31:0] pc_plus_4_to_if_id;
 wire [31:0] instruction_wire_to_if_id;
+//EX/MEM
+wire [31:0] alu_result_to_ex_mem;
+wire zero_flag_ex;
+ 
+//ID/
 //Pipeline wire end
 
 wire [2:0] aluop_wire;
@@ -341,7 +347,7 @@ MUX_Register_or_ra
 
 
 assign selector_branch_flag_wire = (branch_ne_wire && !zero_wire ) || (branch_eq_wire && zero_wire);
-assign branch_address_wire = ( (Inmmediate_extend_wire<<2) + pc_plus_4_wire);
+assign branch_address_wire = ( (Inmmediate_extend_wire<<2) + pc_plus_4_wire); //ADDER
 
 Multiplexer2to1
 #(
@@ -369,6 +375,72 @@ IF_ID_Stage
 
 	.OUT_PC_Conter_Plus_4(pc_plus_4_wire),
 	.OUT_Instruction_Wire(instruction_bus_wire)
+);
+
+EX_MEM
+EX_MEM_Stage
+(
+	.clk(clk),
+	.reset(reset),
+	
+	.IN_Alu_RESULT(),
+	.IN_ALU_zERO(),
+	.IN_REG_dEST(),
+	.IN_READ_dATA(),
+	.IN_BEQ_wIRE(),
+	.IN_BNE_wIRE(),
+	.IN_ADD_rESULT(),
+	
+	.OUT_DM_aDRESS(),
+	.OUT_DM_wRITE_DATA(),
+	.OUT_BRANCH_sELECTOR(), 
+	.OUT_REG_dEST(),
+	.OUT_BEQ_wIRE(),
+	.OUT_BNE_wIRE(),
+	.OUT_ADD_rESULT()
+);
+
+ID_EX
+ID_EX_Stage
+(
+	.clk(clk),
+	.reset(reset),
+	
+	.IN_Alu_Op(),
+	.IN_Alu_Src(),
+	.IN_Beq(),
+	.IN_Bne(),
+	.In_Jump_L(),
+	.IN_Jump_R(),
+	.IN_Jump(),
+	.IN_Mem_Read(),
+	.IN_Mem_Write(),
+	.IN_Mem_to_Reg(),
+	.IN_Reg_Dst(),
+	.IN_Read_Data_1(),
+	.IN_Read_Data_2(),
+	.IN_Pc_Plus_4(),
+	.IN_Sign_Extend(),
+	.IN_Instruction_20_16(),
+	.IN_Instruction_15_11(),
+	
+	.OUT_Alu_Op(),
+	.OUT_Alu_Src(),
+	.OUT_Beq(),
+	.OUT_Bne(),
+	.OUT_Jump_L(),
+	.OUT_Jump_R(),
+	.OUT_Jump(),
+	.OUT_Mem_Read(),
+	.OUT_Mem_Write(),
+	.OUT_Mem_to_Reg(),
+	.OUT_Reg_Dst(),
+	.OUT_Read_Data_1(),
+	.OUT_Read_Data_2(),
+	.OUT_Pc_Plus_4(),
+	.OUT_Sign_Extend(),
+	.OUT_Instruction_20_16(),
+	.OUT_Instruction_15_11(),
 );
 
 endmodule
