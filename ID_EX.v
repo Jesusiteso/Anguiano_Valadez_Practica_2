@@ -18,8 +18,8 @@ module ID_EX
 	input IN_Read_Data_2,
 	input[31:0] IN_Pc_Plus_4,
 	input[31:0] IN_Sign_Extend,
-	input[4:0] IN_Instruction_20_16,
-	input[4:0] IN_Instruction_15_11,
+	input[20:16] IN_Instruction_20_16,
+	input[15:11] IN_Instruction_15_11,
 	
 	output[2:0] OUT_Alu_Op,
 	output OUT_Alu_Src,

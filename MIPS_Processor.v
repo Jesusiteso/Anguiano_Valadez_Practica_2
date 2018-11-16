@@ -74,10 +74,32 @@ wire selector_branch_flag_wire;
 wire [31:0] branch_address_wire;
 wire [31:0] mux_branch_to_mux_jump_wire;
 // end JR, Jmp
+
 //Pipeline wires
 //IF/ID
 wire [31:0] pc_plus_4_to_if_id;
 wire [31:0] instruction_wire_to_if_id;
+//END IF/ID
+
+//ID/EX
+wire[2:0] alu_op_out_pwire;
+wire alu_src_out_pwire;
+wire beq_out_pwire;
+wire bne_out_pwire;
+wire jump_l_out_pwire;
+wire jump_r_out_pwire;
+wire mem_read_out_pwire;
+wire mem_write_out_pwire;
+wire mem_to_reg_out_pwire;
+wire reg_dst_out_pwire;
+wire read_data_1_out_pwire;
+wire read_data_2_out_pwire;
+wire[31:0] pc_plus_4_out_pwire;
+wire[31:0] sign_extend_out_pwire;
+wire[4:0] instruction_20_16_out_wire;
+wire[4:0] instruction_15_11_out_wire:
+//END ID/EX
+
 //EX/MEM
 wire [31:0] alu_result_to_ex_mem;
 wire zero_flag_ex;
@@ -406,41 +428,41 @@ ID_EX_Stage
 	.clk(clk),
 	.reset(reset),
 	
-	.IN_Alu_Op(),
-	.IN_Alu_Src(),
-	.IN_Beq(),
-	.IN_Bne(),
-	.In_Jump_L(),
-	.IN_Jump_R(),
-	.IN_Jump(),
-	.IN_Mem_Read(),
-	.IN_Mem_Write(),
-	.IN_Mem_to_Reg(),
-	.IN_Reg_Dst(),
-	.IN_Read_Data_1(),
-	.IN_Read_Data_2(),
-	.IN_Pc_Plus_4(),
-	.IN_Sign_Extend(),
-	.IN_Instruction_20_16(),
-	.IN_Instruction_15_11(),
+	.IN_Alu_Op(aluop_wire),
+	.IN_Alu_Src(alu_src_wire),
+	.IN_Beq(branch_eq_wire),
+	.IN_Bne(branch_ne_wire),
+	.In_Jump_L(jump_l_wire),
+	.IN_Jump_R(jump_r_wire),
+	.IN_Jump(jump_wire),
+	.IN_Mem_Read(mem_read_wire),
+	.IN_Mem_Write(mem_write_wire),
+	.IN_Mem_to_Reg(mem_to_reg_wire),
+	.IN_Reg_Dst(reg_dst_wire),
+	.IN_Read_Data_1(read_data_1_wire),
+	.IN_Read_Data_2(read_data_2_wire),
+	.IN_Pc_Plus_4(pc_plus_4_wire),
+	.IN_Sign_Extend(Inmmediate_extend_wire),
+	.IN_Instruction_20_16(instruction_bus_wire[20:16]),
+	.IN_Instruction_15_11(instruction_bus_wire[15:11]),
 	
-	.OUT_Alu_Op(),
-	.OUT_Alu_Src(),
-	.OUT_Beq(),
-	.OUT_Bne(),
-	.OUT_Jump_L(),
-	.OUT_Jump_R(),
-	.OUT_Jump(),
-	.OUT_Mem_Read(),
-	.OUT_Mem_Write(),
-	.OUT_Mem_to_Reg(),
-	.OUT_Reg_Dst(),
-	.OUT_Read_Data_1(),
-	.OUT_Read_Data_2(),
-	.OUT_Pc_Plus_4(),
-	.OUT_Sign_Extend(),
-	.OUT_Instruction_20_16(),
-	.OUT_Instruction_15_11(),
+	.OUT_Alu_Op(alu_op_out_pwire),
+	.OUT_Alu_Src(alu_src_out_pwire),
+	.OUT_Beq(beq_out_pwire),
+	.OUT_Bne(bne_out_pwire),
+	.OUT_Jump_L(jump_l_out_pwire),
+	.OUT_Jump_R(jump_r_out_pwire),
+	.OUT_Jump(jump_out_pwire),
+	.OUT_Mem_Read(mem_read_out_pwire),
+	.OUT_Mem_Write(mem_write_out_pwire),
+	.OUT_Mem_to_Reg(mem_to_reg_out_pwire),
+	.OUT_Reg_Dst(reg_dst_out_pwire),
+	.OUT_Read_Data_1(read_data_1_out_pwire),
+	.OUT_Read_Data_2(read_data_2_out_pwire),
+	.OUT_Pc_Plus_4(pc_plus_4_out_pwire),
+	.OUT_Sign_Extend(sign_extend_out_pwire),
+	.OUT_Instruction_20_16(instruction_20_16_out_wire),
+	.OUT_Instruction_15_11(instruction_15_11_out_wire),
 );
 
 endmodule
